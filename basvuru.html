@@ -1,0 +1,152 @@
+<!DOCTYPE html> 
+<html lang="eng">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="style.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+        <title>Başvuru Formu</title>
+    </head>
+    <body>
+        <div id="app">
+
+            <form class="vue-form" @submit.prevent="submit">
+
+              <div class="error-message">
+                <p v-show="!email.valid">Lütfen mail adresininizi giriniz</p>
+              </div>
+          
+              <fieldset>
+                <legend>Vue Form</legend>
+                <div>
+                  <label class="label" for="name">İsminiz</label>
+                  <input type="text" name="name" id="name" required="" v-model="name">
+                </div>
+                <div>
+                  <label class="label" for="email">Mailiniz</label>
+                  <input type="email" name="email" id="email" required=""
+                         :class="{ email , error: !email.valid }"
+                         v-model="email.value">
+                </div>
+                <div>
+                  <h4>Başvurduğunuz pozisyon</h4>
+                  <p class="select">
+                    <select class="budget" v-model="selection.member">
+                                  <option value="0">Front end</option>
+                                  <option value="1">Back end</option>
+                                  <option value="2">Full Stack</option>
+                                  <option value="2">Yönetim Kadroları</option>
+                              </select>
+                  </p>
+                </div>
+          
+                <div>
+                  <h4>Deneyiminiz</h4>
+          
+                  <ul class="vue-form-list">
+                    <li>
+                      <input type="radio" name="radio-1" id="radio-1" value="angular" 
+                             v-model="selection.framework">
+                      <label for="radio-1">0-4 yıl</label>
+                    </li>
+                    <li>
+                      <input type="radio" name="radio-2" id="radio-2" value="react" 
+                             v-model="selection.framework">
+                      <label for="radio-2">4-8 yıl</label>
+                    </li>
+                    <li>
+                      <input type="radio" name="radio-3" id="radio-3" value="vue" 
+                             v-model="selection.framework">
+                      <label for="radio-3">8+ yıl</label>
+                    </li>
+                  </ul>
+                </div>
+          
+                <div>
+                  <h4>Özellikler</h4>
+                  <ul class="vue-form-list">
+                    <li v-for="(feature, index) in features">
+                      <input type="checkbox" 
+                             :value="feature" 
+                             :id="'cb-feature-'+index" 
+                             v-model="selection.features">
+                      <label :for="'cb-feature-'+index">{{feature}}</label>
+                    </li>
+                    <li>
+                      <input type="checkbox" id="checkbox-all" @click="checkAll">
+                      <label for="checkbox-all">Hepsi</label>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <label class="label" for="textarea">Mesajınız</label>
+                  <textarea class="message" name="textarea" id="textarea" required="" 
+                            v-model="message.text" 
+                            :maxlength="message.maxlength"></textarea>
+                  <span class="counter">{{ message.text.length }} / {{ message.maxlength }}</span>
+                </div>
+                <div>
+                  <input type="submit" value="Gönder">
+                </div>
+              </fieldset>
+            </form>
+          
+            <div class="debug">
+              <pre><code>{{ $data }}</code></pre>
+            </div>
+          
+          </div>
+
+       <script>
+       var emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+new Vue({
+  el: "#app",
+  data: function() {
+    return {
+      name: "Velihan Toptaş",
+      email: {
+        value: "velihantpts@gmail.com",
+        valid: true
+      },
+      features: ["Angular JS", "Vue JS", "React"],
+      selection: {
+        member: "0",
+        framework: "vue",
+        features: []
+      },
+      message: {
+        text: `Merhaba iyi günler,\n...`,
+        maxlength: 255
+      },
+      submitted: false
+    };
+  },
+  methods: {
+    submit: function() {
+      this.submitted = true;
+    },
+    validate: function(type, value) {
+      if (type === "email") {
+        this.email.valid = this.isEmail(value) ? true : false;
+      }
+    },
+    isEmail: function(value) {
+      return emailRegExp.test(value);
+    },
+    checkAll: function(event) {
+      this.selection.features = event.target.checked ? this.features : [];
+    }
+  },
+  watch: {
+    "email.value": function(value) {
+      this.validate("email", value);
+    }
+  }
+});
+
+       </script>
+       <script src="script.js"></script>
+    </body>
+</html>
